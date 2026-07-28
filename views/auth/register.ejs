@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('../partials/head') %>
+  <title><%= title %> | GreenRoute</title>
+</head>
+<body>
+  <%- include('../partials/navbar') %>
+
+  <main>
+    <section class="auth-bg">
+      <div class="auth-card">
+
+        <div class="auth-header">
+          <div class="auth-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#2FBF71" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 8C8 10 5.9 16.17 3.82 19.38C3.17 20.35 4.5 21.5 5.5 20.5C8 18 10.5 15 17 15C20 15 22 13 22 8C22 3 17 2 12 2C7 2 3 5 3 9C3 11.5 4 13.5 6 14.5"/>
+            </svg>
+          </div>
+          <h1>Create account</h1>
+          <p>Join GreenRoute and start tracking your carbon footprint</p>
+        </div>
+
+        <% if (locals.error) { %>
+          <div class="alert alert--error"><%= error %></div>
+        <% } else if (locals.query) { %>
+          <% if (query.error === 'exists') { %>
+            <div class="alert alert--error">An account with this email already exists.</div>
+          <% } else if (query.error === 'missing') { %>
+            <div class="alert alert--error">Please fill in all fields.</div>
+          <% } else if (query.error === 'shortpassword') { %>
+            <div class="alert alert--error">Password must be at least 8 characters.</div>
+          <% } else if (query.error === 'invalidemail') { %>
+            <div class="alert alert--error">Please enter a valid email address.</div>
+          <% } %>
+        <% } %>
+        <form action="/api/auth/register" method="POST" class="auth-form">
+
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input id="name" name="name" type="text" required placeholder="Your name" autocomplete="name">
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" required placeholder="you@example.com" autocomplete="email">
+          </div>
+
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input id="password" name="password" type="password" required minlength="8" placeholder="At least 8 characters" autocomplete="new-password">
+            <span class="form-hint">Minimum 8 characters</span>
+          </div>
+
+          <button type="submit" class="auth-submit">
+            Create Account →
+          </button>
+
+        </form>
+
+        <div class="auth-divider"></div>
+
+        <p class="auth-footer">
+          Already have an account?
+          <a href="/login">Sign in here</a>
+        </p>
+
+      </div>
+    </section>
+  </main>
+
+  <%- include('../partials/footer') %>
+</body>
+</html>

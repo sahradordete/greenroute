@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('../partials/head') %>
+  <title><%= title %> | GreenRoute</title>
+</head>
+<body>
+  <%- include('../partials/navbar') %>
+
+  <main>
+    <div class="page-wrap">
+
+      <div class="page-header">
+        <h1>Plan Your Journey</h1>
+        <p>Enter your route details and we'll calculate your carbon footprint</p>
+      </div>
+
+      <% if (locals.error) { %>
+        <div class="alert alert--error"><%= error %></div>
+      <% } %>
+
+      <form action="/api/journeys" method="POST">
+
+        <div class="card" style="margin-bottom: 20px;">
+          <div class="card__label">Route Details</div>
+
+          <div class="form-group">
+            <label for="origin">Starting Point</label>
+            <input
+              type="text"
+              id="origin"
+              name="origin"
+              required
+              placeholder="e.g. Bolton"
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="destination">Destination</label>
+            <input
+              type="text"
+              id="destination"
+              name="destination"
+              required
+              placeholder="e.g. Manchester"
+            >
+          </div>
+
+          <div class="form-group" style="margin-bottom: 0;">
+            <label for="distanceKm">Distance (km)</label>
+            <input
+              type="number"
+              id="distanceKm"
+              name="distanceKm"
+              required
+              min="0.1"
+              step="0.1"
+              placeholder="e.g. 15"
+              oninput="calcEmission()"
+            >
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom: 20px;">
+          <div class="card__label">Transport Mode</div>
+          <div class="form-group" style="margin-bottom: 0;">
+            <label for="modeId">Select Mode</label>
+            <select id="modeId" name="modeId" required onchange="calcEmission()">
+              <option value="" disabled selected>Choose a transport mode</option>
+              <% modes.forEach(mode => { %>
+                <option
+                  value="<%= mode._id %>"
+                  data-factor="<%= mode.emissionFactor %>"
+                >
+                  <%= mode.name %>
+                </option>
+              <% }) %>
+            </select>
+          </div>
+        </div>
+
+        <div class="emission-display">
+          <div>
+            <div class="emission-display__label">Estimated Emissions</div>
+            <div class="emission-display__value" id="emVal">—</div>
+            <div class="emission-display__unit">kg CO₂</div>
+          </div>
+          <div class="emission-display__icon">🌿</div>
+        </div>
+
+        <button type="submit" class="btn btn--primary btn--full btn--lg" style="margin-top: 20px;">
+          Create Journey →
+        </button>
+
+      </form>
+    </div>
+  </main>
+
+  <%- include('../partials/footer') %>
+
+  <script>
+    function calcEmission() {
+      const distInput = document.getElementById('distanceKm');
+      const modeSelect = document.getElementById('modeId');
+      const emVal = document.getElementById('emVal');
+
+      const distance = parseFloat(distInput.value);
+      const selectedOption = modeSelect.options[modeSelect.selectedIndex];
+      const factor = parseFloat(selectedOption?.dataset?.factor);
+
+      if (!isNaN(distance) && !isNaN(factor) && distance > 0) {
+        const emission = (distance * factor).toFixed(2);
+        emVal.textContent = emission;
+      } else {
+        emVal.textContent = '—';
+      }
+    }
+  </script>
+
+</body>
+</html>

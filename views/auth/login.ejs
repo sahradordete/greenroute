@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head') %>
+    <title><%= title %> | GreenRoute</title>
+</head>
+
+<body>
+
+    <%- include('../partials/navbar') %>
+
+    <main>
+        <section class="auth-bg">
+            <div class="auth-card">
+
+                <div class="auth-header">
+                    <div class="auth-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#2FBF71" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17 8C8 10 5.9 16.17 3.82 19.38C3.17 20.35 4.5 21.5 5.5 20.5C8 18 10.5 15 17 15C20 15 22 13 22 8C22 3 17 2 12 2C7 2 3 5 3 9C3 11.5 4 13.5 6 14.5"/>
+                        </svg>
+                    </div>
+                    <h1>Welcome back</h1>
+                    <p>Sign in to continue tracking your green journey</p>
+                </div>
+
+                <% if (locals.query) { %>
+                    <% if (query.error === 'suspended') { %>
+                        <div class="alert alert--error">Your account has been suspended. Please contact support.</div>
+                    <% } else if (query.error === 'notfound') { %>
+                        <div class="alert alert--error">No account found with that email address.</div>
+                    <% } else if (query.error === 'invalid') { %>
+                        <div class="alert alert--error">Incorrect password. Please try again.</div>
+                    <% } else if (query.error === 'missing') { %>
+                        <div class="alert alert--error">Please enter your email and password.</div>
+                    <% } %>
+                <% } %>
+
+                <form action="/api/auth/login" method="POST" class="auth-form">
+
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            required
+                            placeholder="Enter your email"
+                            autocomplete="email"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            required
+                            minlength="6"
+                            placeholder="Enter your password"
+                            autocomplete="current-password"
+                        >
+                    </div>
+
+                    <button type="submit" class="auth-submit">
+                        Sign In →
+                    </button>
+
+                </form>
+
+                <div class="auth-divider"></div>
+
+                <p class="auth-footer">
+                    Don't have an account?
+                    <a href="/register">Create one here</a>
+                </p>
+
+            </div>
+        </section>
+    </main>
+
+    <%- include('../partials/footer') %>
+
+</body>
+</html>

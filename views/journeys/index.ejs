@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('../partials/head') %>
+  <title><%= title %> | GreenRoute</title>
+</head>
+<body>
+  <%- include('../partials/navbar') %>
+
+  <main>
+    <div class="page-wrap">
+
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 32px;">
+        <div>
+          <h1>My Journeys</h1>
+          <p>Track your carbon footprint across all your trips</p>
+        </div>
+      </div>
+
+      <% if (!journeys || journeys.length === 0) { %>
+        <div class="empty-state">
+          <div class="empty-state__icon">🗺️</div>
+          <h3>No journeys yet</h3>
+          <p>Start tracking your carbon footprint by creating your first journey</p>
+          <a href="/journeys/new" class="btn btn--primary">Create your first journey</a>
+        </div>
+      <% } else { %>
+        <div class="journey-list">
+          <% journeys.forEach(j => { %>
+            <a href="/journeys/<%= j._id %>" class="journey-card">
+              <div>
+                <div class="journey-card__route">
+                  <%= j.origin || '—' %> → <%= j.destination || '—' %>
+                </div>
+                <div class="journey-card__meta">
+                  <span class="journey-card__tag">
+                    🚌 <%= j.modeId && j.modeId.name ? j.modeId.name : '—' %>
+                  </span>
+                  <span class="journey-card__tag">
+                    📍 <%= j.distanceKm ?? '—' %> km
+                  </span>
+                  <span class="journey-card__tag">
+                    🕐 <%= j.createdAt ? new Date(j.createdAt).toLocaleDateString('en-GB') : '—' %>
+                  </span>
+                </div>
+              </div>
+              <div class="journey-card__co2">
+                <div class="journey-card__co2-num"><%= j.estimatedEmissions ?? '—' %></div>
+                <div class="journey-card__co2-label">kg CO₂</div>
+              </div>
+            </a>
+          <% }) %>
+        </div>
+      <% } %>
+
+    </div>
+  </main>
+
+  <%- include('../partials/footer') %>
+</body>
+</html>

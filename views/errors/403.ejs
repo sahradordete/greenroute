@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('../partials/head') %>
+  <title>Access Denied | GreenRoute</title>
+</head>
+<body>
+  <%- include('../partials/navbar') %>
+
+  <main>
+    <div class="auth-bg">
+      <div class="auth-card" style="text-align: center;">
+        <div class="auth-icon" style="margin: 0 auto 20px;">
+          🔒
+        </div>
+        <h1 style="margin-bottom: 8px;">Access Denied</h1>
+        <p style="margin-bottom: 28px;">You need admin privileges to access this page.</p>
+        <a href="/login" class="btn btn--primary btn--full">Go to Login</a>
+        <div class="auth-divider"></div>
+        <p class="auth-footer">
+          Looking for your journeys?
+          <a href="/journeys">Go to My Journeys</a>
+        </p>
+      </div>
+    </div>
+  </main>
+
+  <%- include('../partials/footer') %>
+</body>
+</html>

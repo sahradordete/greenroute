@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('../partials/head') %>
+  <title><%= title %> | GreenRoute</title>
+</head>
+<body>
+  <%- include('../partials/navbar') %>
+
+  <main>
+    <div class="page-wrap">
+
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 32px;">
+        <div>
+          <h1><%= journey.origin %> → <%= journey.destination %></h1>
+          <p>Journey recorded on <%= journey.createdAt ? new Date(journey.createdAt).toLocaleDateString('en-GB') : '—' %></p>
+        </div>
+        <a href="/journeys" class="btn btn--ghost">← Back</a>
+      </div>
+
+      <!-- Emissions hero -->
+      <div class="emissions-hero" style="margin-bottom: 20px;">
+        <div class="emissions-hero__label">Estimated Emissions</div>
+        <div style="display: flex; align-items: baseline; gap: 8px; margin: 8px 0 4px;">
+          <span class="emissions-hero__value"><%= journey.estimatedEmissions ?? '—' %></span>
+          <span class="emissions-hero__unit">kg CO₂</span>
+        </div>
+        <div class="emissions-hero__sub">
+          <%= journey.distanceKm ?? '—' %> km ·
+          <%= journey.modeId && journey.modeId.name ? journey.modeId.name : '—' %>
+        </div>
+      </div>
+
+      <!-- Details card -->
+      <div class="card">
+        <div class="card__label">Journey Details</div>
+
+        <div class="system-row">
+          <span class="system-row__key">Transport Mode</span>
+          <span class="system-row__val">
+            <%= journey.modeId && journey.modeId.name ? journey.modeId.name : '—' %>
+          </span>
+        </div>
+
+        <div class="system-row">
+          <span class="system-row__key">Distance</span>
+          <span class="system-row__val"><%= journey.distanceKm ?? '—' %> km</span>
+        </div>
+
+        <div class="system-row">
+          <span class="system-row__key">Emission Factor Used</span>
+          <span class="system-row__val"><%= journey.emissionFactorUsed ?? '—' %> kg CO₂/km</span>
+        </div>
+
+        <div class="system-row">
+          <span class="system-row__key">Estimated Emissions</span>
+          <span class="system-row__val" style="color: var(--accent); font-size: 16px;">
+            <%= journey.estimatedEmissions ?? '—' %> kg CO₂
+          </span>
+        </div>
+
+        <div class="system-row">
+          <span class="system-row__key">Date</span>
+          <span class="system-row__val">
+            <%= journey.createdAt ? new Date(journey.createdAt).toLocaleString() : '—' %>
+          </span>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <%- include('../partials/footer') %>
+</body>
+</html>

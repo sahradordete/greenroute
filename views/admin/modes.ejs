@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('../partials/head') %>
+  <title><%= title %> | GreenRoute</title>
+</head>
+<body>
+  <%- include('../partials/navbar') %>
+
+  <main>
+    <div class="page-wrap">
+
+      <div class="page-header">
+        <h1>Emission Factors</h1>
+        <p>Manage transport modes and their CO₂ emission factors</p>
+      </div>
+
+      <% if (locals.success) { %>
+        <div class="alert alert--success"><%= success %></div>
+      <% } %>
+      <% if (locals.error) { %>
+        <div class="alert alert--error"><%= error %></div>
+      <% } %>
+
+      <!-- Add new mode -->
+      <div class="card" style="margin-bottom: 20px;">
+        <div class="card__label">Add New Mode</div>
+        <form action="/api/modes" method="POST" class="auth-form">
+          <div class="form-group">
+            <label for="name">Transport Mode</label>
+            <div class="form-group">
+              <input
+                type="text"
+                id="name"
+                name="name"
+                required
+                placeholder="e.g. Ferry, Scooter, Metrolink"
+              >
+            </div>
+          </div>
+          <div class="form-group" style="margin-bottom: 0;">
+            <label for="emissionFactor">Emission Factor (kg CO₂ per km)</label>
+            <input
+              type="number"
+              id="emissionFactor"
+              name="emissionFactor"
+              required
+              min="0"
+              step="0.001"
+              placeholder="e.g. 0.089"
+            >
+          </div>
+          <button type="submit" class="btn btn--primary" style="margin-top: 16px;">
+            Add Mode →
+          </button>
+        </form>
+      </div>
+
+      <!-- Existing modes -->
+      <div class="card">
+        <div class="card__label">Current Modes</div>
+
+        <% if (!modes || modes.length === 0) { %>
+          <div class="empty-state">
+            <div class="empty-state__icon">🚌</div>
+            <h3>No modes yet</h3>
+            <p>Add your first transport mode above</p>
+          </div>
+        <% } else { %>
+          <div class="mode-list">
+            <% modes.forEach(m => { %>
+              <div class="mode-row">
+                <div class="mode-row__icon mode-row__icon--bus">
+                  <% if (m.name === 'Bus')         { %>🚌
+                  <% } else if (m.name === 'Car')  { %>🚗
+                  <% } else if (m.name === 'Train'){ %>🚆
+                  <% } else if (m.name === 'Tram' || m.name === 'MetroLink') { %>🚃
+                  <% } else if (m.name === 'Bike') { %>🚲
+                  <% } else if (m.name === 'Walk') { %>🚶
+                  <% } else { %>🚌
+                  <% } %>
+                </div>
+
+                <div class="mode-row__name"><%= m.name %></div>
+
+                <div style="flex: 1;">
+                  <span class="badge badge--green"><%= m.emissionFactor %> kg CO₂/km</span>
+                </div>
+
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <span class="badge <%= m.active ? 'badge--green' : 'badge--muted' %>">
+                    <%= m.active ? 'Active' : 'Inactive' %>
+                  </span>
+
+                  <!-- Edit form inline -->
+                  <form action="/api/modes/<%= m._id %>?_method=PUT" method="POST" style="display:flex; gap: 8px; align-items: center;">
+                    <input
+                      type="number"
+                      name="emissionFactor"
+                      value="<%= m.emissionFactor %>"
+                      step="0.001"
+                      min="0"
+                      style="width: 90px; padding: 7px 10px; border: 1.5px solid var(--muted); border-radius: 8px; font-size: 13px; font-family: 'DM Sans', sans-serif;"
+                    >
+                    <button type="submit" class="btn btn--outline btn--sm">Update</button>
+                  </form>
+
+                  <form action="/api/modes/<%= m._id %>?_method=DELETE" method="POST">
+                    <button type="submit" class="btn btn--danger btn--sm">Delete</button>
+                  </form>
+                </div>
+              </div>
+            <% }) %>
+          </div>
+        <% } %>
+      </div>
+
+    </div>
+  </main>
+
+  <%- include('../partials/footer') %>
+</body>
+</html>
