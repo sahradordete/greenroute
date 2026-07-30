@@ -4,8 +4,8 @@ const TransportMode = require('../../models/TransportMode');
 
 exports.showNewJourneyForm = async (req, res) => {
   try {
-
     const modes = await TransportMode.find({ active: true }).sort({ name: 1 });
+    console.log('MODES FOUND:', modes);
 
     return res.render('journeys/new', {
       title: 'New Journey',
